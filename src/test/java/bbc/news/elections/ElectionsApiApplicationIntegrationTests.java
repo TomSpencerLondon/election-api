@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import java.io.InputStream;
 import java.net.URL;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -88,6 +89,21 @@ class ElectionsApiApplicationIntegrationTests {
 		// assert winner = LAB
 		// assert sum = 650
 	}
+
+	@Test
+	public void testScoreboard() throws Exception {
+		Scoreboard scoreboard = runTest(650);
+		assertNotNull(scoreboard);
+
+		// Validate seats
+		assertEquals(62, scoreboard.getSeatsPerParty().get("LD"));
+		assertEquals(349, scoreboard.getSeatsPerParty().get("LAB"));
+		assertEquals(210, scoreboard.getSeatsPerParty().get("CON"));
+
+		// Validate overall winner
+		assertEquals("LAB", scoreboard.getOverallWinner());
+	}
+
 
 
 	private Scoreboard runTest(int numberOfResults) throws Exception {
